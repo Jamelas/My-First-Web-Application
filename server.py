@@ -1,6 +1,7 @@
 import socket
 import _thread
 import analysis
+import json
 
 
 class HTTPRequest:
@@ -17,6 +18,7 @@ authkey = 'MjAwMTk4Mjk6MjAwMTk4Mjk='
 
 
 def parse(request):
+    headers =[]
     reqline = request.decode().split(hsep).pop(0)
     if request.decode():
         headers = request.decode().split(hsep)
@@ -24,13 +26,15 @@ def parse(request):
             headers.pop()  #remove payload
         if headers:
             headers.pop() #remove empty line
-    headers.pop(0)  #remove request line
+        if headers:
+            headers.pop(0)  #remove request line
     payload = request.decode().split(hsep).pop()
     try:
         cmd, path, prot = reqline.split()
     except ValueError:
         cmd = ''
         path = ''
+        prot = ''
     return HTTPRequest(cmd, path, prot, headers, payload)
 
 
@@ -91,15 +95,16 @@ def deliver_jpeg(conn, filename):
 def deliver_json(conn, filename):
     """Deliver content of JSON file"""
     deliver_200(conn)
-    content = gobble_file(filename)
+    '''############## Method incomplete - ONLY WORKS WITH input.json ##################'''
     http_hdr(conn, 'Content-Type: application/json')
-    http_bdy(conn, content.encode())
-    print(" - delivering " + filename + " application/json")
+    http_bdy(conn, json.dumps(analysis.get_data()).encode())
+    print(" - delivering " + " application/json")
 
 
 def deliver_json_str(conn, string):
     deliver_200(conn)
     http_hdr(conn, 'Content-Type: application/json')
+    print(string)
     http_bdy(conn, string.encode())
 
 def deliver_js(conn, filename):
@@ -163,6 +168,9 @@ def do_request(connectionSocket):
 
         elif testrq(httprq, 'GET', '/doit.js'):
             deliver_js(connectionSocket, 'doit.js')
+
+        elif testrq(httprq, 'GET', '/view/input'):
+            deliver_json(connectionSocket, '\\data\\input.json')
 
         # ... otherwise deliver "Not found" response
         else:
