@@ -18,9 +18,12 @@ authkey = 'MjAwMTk4Mjk6MjAwMTk4Mjk='
 
 def parse(request):
     reqline = request.decode().split(hsep).pop(0)
-    headers = request.decode().split(hsep)
-    headers.pop()  #remove payload
-    headers.pop() #remove empty line
+    if request.decode():
+        headers = request.decode().split(hsep)
+        if headers:
+            headers.pop()  #remove payload
+        if headers:
+            headers.pop() #remove empty line
     headers.pop(0)  #remove request line
     payload = request.decode().split(hsep).pop()
     try:
@@ -94,6 +97,11 @@ def deliver_json(conn, filename):
     print(" - delivering " + filename + " application/json")
 
 
+def deliver_json_str(conn, string):
+    deliver_200(conn)
+    http_hdr(conn, 'Content-Type: application/json')
+    http_bdy(conn, string.encode())
+
 def deliver_js(conn, filename):
     """Deliver content of JavaScript file"""
     deliver_200(conn)
@@ -116,6 +124,7 @@ def authorized(headers):
             v = v.split()
             v = v[1]  # Removes 'Basic' from the authkey
             if v == authkey:
+                print("User authorized")
                 return True
             else:
                 return False
@@ -133,7 +142,6 @@ def do_request(connectionSocket):
     httprq = parse(request)
 
     if authorized(httprq.headers):
-        print("User authorized")
         print(httprq.cmd, httprq.path)
 
         if testrq(httprq, 'GET', '/'):
@@ -145,7 +153,7 @@ def do_request(connectionSocket):
         elif testrq(httprq, 'POST', '/analysis'):
             analysis.save_input(httprq.payload)
             analysis.create_profile()
-            deliver_200(connectionSocket)
+            deliver_json_str(connectionSocket, '{"status": "success"}')
 
         elif testrq(httprq, 'GET', '/view/profile'):
             deliver_json(connectionSocket, 'data/input.json')
