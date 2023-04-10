@@ -23,11 +23,11 @@ def parse(request):
     if request.decode():
         headers = request.decode().split(hsep)
         if headers:
-            headers.pop()  #remove payload
+            headers.pop()  # remove payload
         if headers:
-            headers.pop() #remove empty line
+            headers.pop() # remove empty line
         if headers:
-            headers.pop(0)  #remove request line
+            headers.pop(0)  # remove request line
     payload = request.decode().split(hsep).pop()
     try:
         cmd, path, prot = reqline.split()
@@ -92,13 +92,16 @@ def deliver_jpeg(conn, filename):
     print(" - delivering " + filename + " image/jpeg")
 
 
-def deliver_json(conn, filename):
+def deliver_json(conn, data):
     """Deliver content of JSON file"""
     deliver_200(conn)
     '''############## Method incomplete - ONLY WORKS WITH input.json ##################'''
     http_hdr(conn, 'Content-Type: application/json')
-    http_bdy(conn, json.dumps(analysis.get_data()).encode())
-    print(" - delivering " + " application/json")
+    if data == "input":
+        http_bdy(conn, json.dumps(analysis.get_input()).encode())
+    else:
+        http_bdy(conn, json.dumps(analysis.get_profile()).encode())
+    print(" - delivering " + data + " application/json")
 
 
 def deliver_json_str(conn, string):
@@ -106,6 +109,7 @@ def deliver_json_str(conn, string):
     http_hdr(conn, 'Content-Type: application/json')
     print(string)
     http_bdy(conn, string.encode())
+
 
 def deliver_js(conn, filename):
     """Deliver content of JavaScript file"""
@@ -129,7 +133,6 @@ def authorized(headers):
             v = v.split()
             v = v[1]  # Removes 'Basic' from the authkey
             if v == authkey:
-                print("User authorized")
                 return True
             else:
                 return False
@@ -160,17 +163,14 @@ def do_request(connectionSocket):
             analysis.create_profile()
             deliver_json_str(connectionSocket, '{"status": "success"}')
 
-        elif testrq(httprq, 'GET', '/view/profile'):
-            deliver_json(connectionSocket, 'data/input.json')
+        elif testrq(httprq, 'GET', '/view/input'):
+            deliver_json(connectionSocket, 'input')
 
         elif testrq(httprq, 'GET', '/view/profile'):
-            deliver_json(connectionSocket, 'data/profile.json')
+            deliver_json(connectionSocket, 'profile')
 
         elif testrq(httprq, 'GET', '/doit.js'):
             deliver_js(connectionSocket, 'doit.js')
-
-        elif testrq(httprq, 'GET', '/view/input'):
-            deliver_json(connectionSocket, '\\data\\input.json')
 
         # ... otherwise deliver "Not found" response
         else:
