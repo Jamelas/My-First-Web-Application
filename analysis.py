@@ -4,8 +4,12 @@ import json
 data = {}
 
 
-def get_data():
+def get_input():
     return data
+
+
+def get_profile():
+    return
 
 
 def save_input(payload):
@@ -51,7 +55,5 @@ def save_input(payload):
 
 
 def create_profile():
-
-
 
     return
