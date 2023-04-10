@@ -79,7 +79,7 @@ def deliver_html(conn, filename):
     content = gobble_file(filename)
     http_hdr(conn, 'Content-Type: text/html')
     http_bdy(conn, content.encode())
-    print(" - delivering " + filename + " text/html")
+    print(" - delivering " + filename + " -- Content-Type: text/html")
 
 
 def deliver_jpeg(conn, filename):
@@ -89,19 +89,16 @@ def deliver_jpeg(conn, filename):
     http_hdr(conn, 'Content-Type: image/jpeg')
     http_hdr(conn, 'Accept-Ranges: bytes')
     http_bdy(conn, content)
-    print(" - delivering " + filename + " image/jpeg")
+    print(" - delivering " + filename + " -- Content-Type: image/jpeg")
 
 
-def deliver_json(conn, data):
+def deliver_json(conn, filename):
     """Deliver content of JSON file"""
     deliver_200(conn)
-    '''############## Method incomplete - ONLY WORKS WITH input.json ##################'''
+    content = gobble_file(filename)
     http_hdr(conn, 'Content-Type: application/json')
-    if data == "input":
-        http_bdy(conn, json.dumps(analysis.get_input()).encode())
-    else:
-        http_bdy(conn, json.dumps(analysis.get_profile()).encode())
-    print(" - delivering " + data + " application/json")
+    http_bdy(conn, content.encode())
+    print(" - delivering: " + filename + " -- Content-Type: application/json")
 
 
 def deliver_json_str(conn, string):
@@ -117,7 +114,7 @@ def deliver_js(conn, filename):
     content = gobble_file(filename)
     http_hdr(conn, 'Content-Type: text/javascript')
     http_bdy(conn, content.encode())
-    print(" - delivering " + filename + " text/javascript")
+    print(" - delivering " + filename + " -- Content-Type: text/javascript")
 
 
 # Confirm if authentication hash matches authentication key
@@ -164,10 +161,10 @@ def do_request(connectionSocket):
             deliver_json_str(connectionSocket, '{"status": "success"}')
 
         elif testrq(httprq, 'GET', '/view/input'):
-            deliver_json(connectionSocket, 'input')
+            deliver_json(connectionSocket, 'data\\input.json')
 
         elif testrq(httprq, 'GET', '/view/profile'):
-            deliver_json(connectionSocket, 'profile')
+            deliver_json(connectionSocket, 'data\\profile.json')
 
         elif testrq(httprq, 'GET', '/doit.js'):
             deliver_js(connectionSocket, 'doit.js')
