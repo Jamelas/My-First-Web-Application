@@ -1,18 +1,11 @@
 import json
 
 
-data = {}
-
-
-def get_input():
-    return data
-
-
-def get_profile():
-    return
+input_data = {}
 
 
 def save_input(payload):
+    """ Parse the data from the form, convert to json, and save as 'input.json' """
 
     json_str = {}
     name_value = payload.split('&')
@@ -48,12 +41,19 @@ def save_input(payload):
     with open('data\\input.json', 'w') as file:
         json.dump(json_str, file, indent=4)
 
-    global data
-    data = json_str
+    global input_data
+    input_data = json_str
 
     return
 
 
 def create_profile():
+    """ Analyze the data from 'input.json' and create a profile, save to 'profile.json' """
+    with open('\\data\\input.json') as file:
+        data = json.load(file)
+        print(data)
+    # print("@@@@@ DEBUG @@@@@\n" + input_data)
+    #for k, v in input_data:
+     #   print("key: " + k + ",     value: " + v)
 
     return
