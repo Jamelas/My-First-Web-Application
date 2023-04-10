@@ -1,8 +1,5 @@
 import json
-
-
-input_data = {}
-
+import requests
 
 def save_input(payload):
     """ Parse the data from the form, convert to json, and save as 'input.json' """
@@ -41,19 +38,76 @@ def save_input(payload):
     with open('data\\input.json', 'w') as file:
         json.dump(json_str, file, indent=4)
 
-    global input_data
-    input_data = json_str
-
     return
 
 
 def create_profile():
     """ Analyze the data from 'input.json' and create a profile, save to 'profile.json' """
-    with open('\\data\\input.json') as file:
-        data = json.load(file)
-        print(data)
-    # print("@@@@@ DEBUG @@@@@\n" + input_data)
-    #for k, v in input_data:
-     #   print("key: " + k + ",     value: " + v)
 
+    file = open('data\\input.json')
+    input_data = json.load(file)
+
+    """ ========================================================================== """
+
+    """ Calculate psyc index score.
+            At the moment this just takes the average value of the 20 valued questions.
+            If time allows, give different values based on the question """
+    psyc_index = 0
+    for question in input_data["question"]:
+        psyc_index += input_data["question"][question]
+    psyc_index /= 20
+    # print(int(psyc_index))
+
+    """ ========================================================================== """
+
+    """ Calculate the suitability of chosen career """
+    suitability = 0
+
+    """ ========================================================================== """
+
+    """ Create the json object to store profile data """
+    profile = {
+        "psycho": {
+            "psyc_index": psyc_index
+        },
+        "career": {
+            "desired": input_data["job"],
+            "suitability": suitability
+        },
+        "movies": "",
+    }
+
+    """ ========================================================================== """
+
+    """ Begin the pet portion of the profile """
+    # List of apis to retrieve random image
+    dog_api = (requests.get('https://dog.ceo/api/breeds/image/random')).json()
+    cat_api = (requests.get('https://dog.ceo/api/breeds/image/random')).json()
+    duck_api = (requests.get('https://dog.ceo/api/breeds/image/random')).json()
+
+    pet_api = {
+        "dog": dog_api["message"],
+        "cat": cat_api["message"],
+        "duck": duck_api["message"]
+    }
+
+    # If a pet/s was chosen, add to the profile
+    pet_chosen = False
+    if "pets" in input_data:
+        profile["pets"] = {}
+        pet_chosen = True
+    if pet_chosen:
+        for pet in input_data["pets"]:
+            profile["pets"][pet] = pet_api[pet]
+
+    """ ========================================================================== """
+
+
+
+    # print(input_data["question"])
+    # print(profile)
+
+
+    with open('data\\profile.json', 'w') as file:
+        json.dump(profile, file, indent=4)
     return
