@@ -1,5 +1,7 @@
 import json
 import requests
+from random import randint
+
 
 def save_input(payload):
     """ Parse the data from the form, convert to json, and save as 'input.json' """
@@ -48,6 +50,7 @@ def create_profile():
     input_data = json.load(file)
 
     """ ========================================================================== """
+    #
 
     """ Calculate psyc index score.
             At the moment this just takes the average value of the 20 valued questions.
@@ -56,14 +59,24 @@ def create_profile():
     for question in input_data["question"]:
         psyc_index += input_data["question"][question]
     psyc_index /= 20
-    # print(int(psyc_index))
 
+    #
     """ ========================================================================== """
+    #
 
     """ Calculate the suitability of chosen career """
-    suitability = 0
+    suitability = randint(1, 5)
 
+    #
     """ ========================================================================== """
+    #
+
+    """ Movie API (based on desired job)"""
+    movie_api = (requests.get("https://www.omdbapi.com/?apikey=5b76f7d0&t=" + input_data["job"])).json()
+
+    #
+    """ ========================================================================== """
+    #
 
     """ Create the json object to store profile data """
     profile = {
@@ -74,7 +87,15 @@ def create_profile():
             "desired": input_data["job"],
             "suitability": suitability
         },
-        "movies": "",
+        "movies": {
+            "title": movie_api["Title"],
+            "year": movie_api["Year"],
+            "runtime": movie_api["Runtime"],
+            "genre": movie_api["Genre"],
+            "director": movie_api["Director"],
+            "actors": movie_api["Actors"],
+            "rating": movie_api["imdbRating"],
+        }
     }
 
     """ ========================================================================== """
@@ -102,12 +123,7 @@ def create_profile():
 
     """ ========================================================================== """
 
-
-
-    # print(input_data["question"])
-    # print(profile)
-
-
     with open('data\\profile.json', 'w') as file:
         json.dump(profile, file, indent=4)
+        
     return
