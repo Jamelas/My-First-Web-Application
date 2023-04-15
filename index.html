@@ -10,9 +10,20 @@
       window.open("/form", "", "toolbar=no");
     }
 
-    function viewInput() {
 
+
+    function viewInput() {
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.onload = function() {
+        data = JSON.parse(this.responseText);
+        
+
+      }
+      xmlhttp.open("GET", "view/input", true);
+      xmlhttp.send();
+      document.getElementById("userInput").style.display = "block";
     }
+
 
     function viewProfile() {
 
@@ -22,15 +33,55 @@
   <body>
 
     <h1>Psychological Profiling</h1>
-  
+
     <p>Welcome to your psychological profile</p>
 
-    <!-- Put in various widgets as appropriate -->
     <br/>
     <button type="button" onclick="fetchForm()">Fetch form</button>
     <br/><br/>
     <button type="button" onclick="viewInput()">View input</button>
     <br/><br/>
     <button type="button" onclick="viewProfile()">View psychological profile</button>
+
+
+    <div id="userInput" style="display: none">
+      <br />
+      <br />
+      <h2><b>User Profile</b></h2>
+      <p id="name">Name: </p>
+      <p id="gender">Gender: </p>
+      <p id="birthyear">Year of birth: </p>
+      <p id="birthplace">Country of birth: </p>
+      <p id="residence">Current country of residence: </p>
+      <hr />
+      <h3>I see myself as someone who...</h3>
+      <p><i>Disagree [1] ..... [5] Agree</i></p>
+      <p id="q1">... is talkative: </p>
+      <p id="q2">... does a thorough job: </p>
+      <p id="q3">... is original, comes up with new ideas: </p>
+      <p id="q4">... is helpful, unselfish with others: </p>
+      <p id="q5">... can be somewhat careless: </p>
+      <p id="q6">... is relaxed, handles stress well: </p>
+      <p id="q7">... is curious about many things: </p>
+      <p id="q8">... is full of energy: </p>
+      <p id="q9">... starts quarrels with others: </p>
+      <p id="q10">... is a reliable worker: </p>
+      <p id="q11">... is a deep thinker: </p>
+      <p id="q12">... tends to be disorganized: </p>
+      <p id="q13">... worries a lot: </p>
+      <p id="q14">... tends to be quiet: </p>
+      <p id="q15">... tends to be lazy: </p>
+      <p id="q16">... sometimes shy: </p>
+      <p id="q17">... is sometimes rude to others: </p>
+      <p id="q18">... tends to find fault with others: </p>
+      <p id="q19">... gets nervous easily: </p>
+      <p id="q20">... likes to work in a team: </p>
+      <hr />
+      <p id="job">The job most appealing is: </p>
+      <p id="pets">Pets that are appealing are: </p>
+      <p id="message">Message: </p>
+      <hr />
+    </div>
+
   </body>
-</html> 
+</html>
