@@ -103,13 +103,13 @@ def create_profile():
     """ Begin the pet portion of the profile """
     # List of apis to retrieve random image
     dog_api = (requests.get('https://dog.ceo/api/breeds/image/random')).json()
-    cat_api = (requests.get('https://dog.ceo/api/breeds/image/random')).json()
-    duck_api = (requests.get('https://dog.ceo/api/breeds/image/random')).json()
+    cat_api = (requests.get('https://api.thecatapi.com/v1/images/search')).json()
+    duck_api = (requests.get('https://random-d.uk/api/v2/random')).json()
 
     pet_api = {
         "dog": dog_api["message"],
-        "cat": cat_api["message"],
-        "duck": duck_api["message"]
+        "cat": cat_api[0]["url"],
+        "duck": duck_api["url"]
     }
 
     # If a pet/s was chosen, add to the profile
