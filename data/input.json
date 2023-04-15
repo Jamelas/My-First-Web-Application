@@ -27,5 +27,10 @@
         "20": 1
     },
     "job": "ceo",
+    "pets": [
+        "dog",
+        "cat",
+        "duck"
+    ],
     "message": ""
 }
