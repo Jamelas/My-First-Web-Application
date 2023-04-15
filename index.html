@@ -37,6 +37,7 @@
         xmlhttp.send();
         document.getElementById("userInput").style.display = "block";
       }
+
       else {
         document.getElementById("name").innerHTML = "";
           document.getElementById("gender").innerHTML = "";
@@ -54,16 +55,49 @@
           document.getElementById("message").innerHTML = "";
           document.getElementById("userInput").style.display = "none";
       }
-
-
     }
 
 
     function viewProfile() {
-      const xmlhttp = new XMLHttpRequest();
-      xmlhttp.onload = function() {
-        data = JSON.parse(this.responseText);
+      if (document.getElementById("userProfile").style.display === "none") {
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.onload = function() {
+          data = JSON.parse(this.responseText);
+          document.getElementById("psyc").innerHTML = data["psycho"]["psyc_index"];
+          document.getElementById("desiredJob").innerHTML = data["career"]["desired"];
+          document.getElementById("suitability").innerHTML = data["career"]["suitability"];
 
+          document.getElementById("movieTitle").innerHTML = data["movies"]["title"];
+          document.getElementById("movieYear").innerHTML = data["movies"]["year"];
+          document.getElementById("movieRuntime").innerHTML = data["movies"]["runtime"];
+          document.getElementById("movieGenre").innerHTML = data["movies"]["genre"];
+          document.getElementById("movieDirector").innerHTML = data["movies"]["director"];
+          document.getElementById("movieActors").innerHTML = data["movies"]["actors"];
+          document.getElementById("movieRating").innerHTML = data["movies"]["rating"];
+
+
+      }
+      xmlhttp.open("GET", "view/profile", true);
+      xmlhttp.send();
+      document.getElementById("userProfile").style.display = "block";
+    }
+
+    else {
+      document.getElementById("psyc").innerHTML = "";
+      document.getElementById("desiredJob").innerHTML = "";
+      document.getElementById("suitability").innerHTML = "";
+
+      document.getElementById("movieTitle").innerHTML = "";
+      document.getElementById("movieYear").innerHTML = "";
+      document.getElementById("movieRuntime").innerHTML = "";
+      document.getElementById("movieGenre").innerHTML = "";
+      document.getElementById("movieDirector").innerHTML = "";
+      document.getElementById("movieActors").innerHTML = "";
+      document.getElementById("movieRating").innerHTML = "";
+
+      document.getElementById("petCanvas").innerHTML = "";
+
+      document.getElementById("userProfile").style.display = "none";
       }
     }
   </script>
@@ -123,11 +157,23 @@
       <hr />
     </div>
 
-   <div id="userProfile">
-    <p id="psyc"></p>
-    <p id="desired_job"></p>
-    <p id="suitability"></p>
-    <p id="movie"></p>
+   <div id="userProfile" style="display: none">
+    <p>Psyc score: <span id="psyc"></span></p>
+    <br />
+    <p>Desired job: <span id="desiredJob"></span></p>
+    <p>Suitability: <span id="suitability"></span></p>
+    <br />
+    <p>You may enjoy this movie: </p>
+     <ul>
+       <li>Title: <span id="movieTitle"></span></li>
+       <li>Year: <span id="movieYear"></span></li>
+       <li>Runtime: <span id="movieRuntime"></span></li>
+       <li>Genre: <span id="movieGenre"></span></li>
+       <li>Director: <span id="movieDirector"></span></li>
+       <li>Actors: <span id="movieActors"></span></li>
+       <li>Rating: <span id="movieRating"></span></li>
+     </ul>
+    <hr />
     <canvas id="petCanvas"></canvas>
   </div>
 
