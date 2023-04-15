@@ -18,7 +18,7 @@ authkey = 'MjAwMTk4Mjk6MjAwMTk4Mjk='
 
 
 def parse(request):
-    headers =[]
+    headers = []
     reqline = request.decode().split(hsep).pop(0)
     if request.decode():
         headers = request.decode().split(hsep)
@@ -133,7 +133,7 @@ def authorized(headers):
                 return True
             else:
                 return False
-
+    return False
 
 def testrq(httprq, cmd, path):
     if httprq.cmd == cmd and httprq.path == path:
