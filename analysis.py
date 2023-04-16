@@ -120,6 +120,8 @@ def create_profile():
     if pet_chosen:
         for pet in input_data["pets"]:
             profile["pets"][pet] = pet_api[pet]
+
+            # Save image to data folder
             data = requests.get(pet_api[pet]).content
             f = open('data\\' + pet + '.jpg', 'wb')
             f.write(data)
