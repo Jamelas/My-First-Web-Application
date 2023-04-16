@@ -169,6 +169,15 @@ def do_request(connectionSocket):
         elif testrq(httprq, 'GET', '/doit.js'):
             deliver_js(connectionSocket, 'doit.js')
 
+        elif testrq(httprq, 'GET', '/view/cat'):
+            deliver_jpeg(connectionSocket, 'data\\cat.jpg')
+
+        elif testrq(httprq, 'GET', '/view/dog'):
+            deliver_jpeg(connectionSocket, 'data\\dog.jpg')
+
+        elif testrq(httprq, 'GET', '/view/duck'):
+            deliver_jpeg(connectionSocket, 'data\\duck.jpg')
+
         # ... otherwise deliver "Not found" response
         else:
             deliver_404(connectionSocket)
