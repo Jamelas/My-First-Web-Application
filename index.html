@@ -75,6 +75,22 @@
           document.getElementById("movieActors").innerHTML = data["movies"]["actors"];
           document.getElementById("movieRating").innerHTML = data["movies"]["rating"];
 
+          if (data["pets"] !== undefined) {
+            const canvas = document.getElementById("petCanvas");
+            const context = canvas.getContext("2d");
+            context.clearRect(0, 0, 1000, 1000);
+            let i = 0;
+            for (const pet in data["pets"]) {
+              const img = new Image();
+
+              img.onload = () => {
+                context.drawImage(img, 10 + (i * 200), 10, 250, 250);
+                i++;
+              };
+              img.src = "view/" + pet;
+            }
+
+          }
 
       }
       xmlhttp.open("GET", "view/profile", true);
@@ -95,7 +111,9 @@
       document.getElementById("movieActors").innerHTML = "";
       document.getElementById("movieRating").innerHTML = "";
 
-      document.getElementById("petCanvas").innerHTML = "";
+      const canvas = document.getElementById("petCanvas");
+      const context = canvas.getContext("2d");
+      context.clearRect(0, 0, 1000, 1000);
 
       document.getElementById("userProfile").style.display = "none";
       }
@@ -119,7 +137,7 @@
     <div id="userInput" style="display: none">
       <br />
       <br />
-      <h2><b>User Profile</b></h2>
+      <h2><b>User Input</b></h2>
       <p>Name: <span id="name"></span></p>
       <p>Gender: <span id="gender"></span></p>
       <p>Year of birth: <span id="birthyear"></span></p>
@@ -158,11 +176,16 @@
     </div>
 
    <div id="userProfile" style="display: none">
+    <br />
+    <br />
+    <h2><b>User Profile</b></h2>
     <p>Psyc score: <span id="psyc"></span></p>
     <br />
+    <h3>Suitability for desired job</h3>
     <p>Desired job: <span id="desiredJob"></span></p>
     <p>Suitability: <span id="suitability"></span></p>
     <br />
+    <hr />
     <p>You may enjoy this movie: </p>
      <ul>
        <li>Title: <span id="movieTitle"></span></li>
@@ -174,7 +197,8 @@
        <li>Rating: <span id="movieRating"></span></li>
      </ul>
     <hr />
-    <canvas id="petCanvas"></canvas>
+    <h3>Here are some images you might like</h3>
+    <canvas id="petCanvas" width="770" height="270"></canvas>
   </div>
 
   </body>
